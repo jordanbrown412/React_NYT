@@ -11,24 +11,37 @@ var Search = React.createClass({
             endDate: ""};
   },
 
-//   // This function will respond to the user input
-//   handleChange: function(event) {
+//   Function to render the results from the query
 
-//     this.setState({ term: event.target.value });
+    renderResults: function() {
 
-//   },
+        return this.props.results.map(function(item, index){
 
-//   // When a user submits...
-//   handleSubmit: function(event) {
-//     // prevent the HTML from trying to submit a form if the user hits "Enter" instead of
-//     // clicking the button
-//     event.preventDefault();
+        })
+    },
 
-//     // Set the parent to have the search term
-//     this.props.setTerm(this.state.term);
-//     this.setState({ term: "" });
-//   },
-//   // Here we describe this component's render method
+  // This function will respond to the user input
+  handleChange: function(event) {
+
+    var newState = {};
+      newState[event.target.id] = event.target.value;
+      this.setState(newState);
+
+  },
+
+  // When a user submits...
+  handleSubmit: function(event) {
+    // prevent the HTML from trying to submit a form if the user hits "Enter" instead of
+    // clicking the button
+    event.preventDefault();
+
+    // Set the parent to have the search term
+    this.props.setTerm(this.state.searchTerm, this.state.beginDate, this.state.endDate);
+    this.setState({ searchTerm: "",
+                    beginDate: "",
+                    endDate: "" });
+  },
+  // Here we describe this component's render method
   render: function() {
     return (
       <div className="panel panel-default">
@@ -73,7 +86,7 @@ var Search = React.createClass({
                 onChange={this.handleChange}
                 required
               />
-              <br />>
+              <br />
               <button
                 className="btn btn-primary"
                 type="submit"

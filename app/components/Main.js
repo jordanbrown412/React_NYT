@@ -1,8 +1,8 @@
 // Include React
 var React = require("react");
 
-var helpers = "../utils/helpers"
-var Search = require("./children/Search")
+var helpers = require("../utils/helpers");
+var Search = require("./children/Search");
 
 // Here we include all of the sub-components
 // import Form from "./children/Form";
@@ -15,76 +15,58 @@ var Search = require("./children/Search")
 // Creating the Main component
 var Main = React.createClass({
 
+  // Here we se{t a generic state associated with the number of clicks
+  // Note how we added in this history state variable
+  getInitialState: function() {
+    return { searchTerm: "", beginDate: "", endDate: "", results: [], history: [] };
+  },
 
-// getInitialState: function(){
+  // The moment the page renders get the History
+  componentDidMount: function() {
+    // Get the latest history.
+    helpers.getHistory().then(function(response) {
+      console.log(response);
+      if (response !== this.state.history) {
+        console.log("History", response.data);
+        this.setState({ history: response.data });
+      }
+    }.bind(this));
+  },
 
-// },
+  // If the component changes (i.e. if a search is entered)...
+  componentDidUpdate: function() {
 
-// componentDidMount: function(){
+    // Run the query for the address
+    helpers.query(this.state.searchTerm, this.state.beginDate, this.state.endDate).then(function(data) {
+      
+        console.log("Results", data);
+        this.setState({ results: data });
 
+        // After we've received the result... then post the search term to our history.
+        helpers.postHistory(this.state.results).then(function() {
+          console.log("Updated!");
 
-// },
+          // After we've done the post... then get the updated history
+          helpers.getHistory().then(function(response) {
+            console.log("Current History", response.data);
 
-// componentDidUpdate: function(){
+            console.log("History", response.data);
 
+            this.setState({ history: response.data });
 
-// },
-
-
+          }.bind(this));
+        }.bind(this));
+      }.bind(this));
   
-// setTerm: function(){
-
-
-// },
-//   // Here we se{t a generic state associated with the number of clicks
-//   // Note how we added in this history state variable
-//   getInitialState: function() {
-//     return { searchTerm: "", results: "", history: [] };
-//   },
-
-//   // The moment the page renders get the History
-//   componentDidMount: function() {
-//     // Get the latest history.
-//     helpers.getHistory().then(function(response) {
-//       console.log(response);
-//       if (response !== this.state.history) {
-//         console.log("History", response.data);
-//         this.setState({ history: response.data });
-//       }
-//     }.bind(this));
-//   },
-
-//   // If the component changes (i.e. if a search is entered)...
-//   componentDidUpdate: function() {
-
-//     // Run the query for the address
-//     helpers.runQuery(this.state.searchTerm).then(function(data) {
-//       if (data !== this.state.results) {
-//         console.log("Address", data);
-//         this.setState({ results: data });
-
-//         // After we've received the result... then post the search term to our history.
-//         helpers.postHistory(this.state.searchTerm).then(function() {
-//           console.log("Updated!");
-
-//           // After we've done the post... then get the updated history
-//           helpers.getHistory().then(function(response) {
-//             console.log("Current History", response.data);
-
-//             console.log("History", response.data);
-
-//             this.setState({ history: response.data });
-
-//           }.bind(this));
-//         }.bind(this));
-//       }
-//     }.bind(this));
-//   },
-//   // This function allows childrens to update the parent.
-//   setTerm: function(term) {
-//     this.setState({ searchTerm: term });
-//   },
-//   // Here we render the function
+    },
+  // This function allows childrens to update the parent.
+  setTerm: function(searchTerm, beginDate, endDate) {
+    
+    this.setState({ searchTerm: searchTerm,
+                    beginDate: beginDate,
+                    endDate: endDate });
+  },
+  // Here we render the function
   render: function() {
     return (
       <div className="container">

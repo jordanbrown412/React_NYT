@@ -8,6 +8,7 @@ var mongoose = require("mongoose");
 var app = express();
 
 var PORT = 3000;
+var Article = require("./models/article")
 
 // Run Morgan for Logging
 app.use(logger("dev"));
@@ -33,6 +34,25 @@ db.once("open", function() {
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/public/index.html");
 });
+
+app.get("/api", function(req, res){
+      Article.find({}).sort([
+          ["date", "descending"]
+        ]).limit(5).exec(function(err, doc) {
+          if (err) {
+            console.log(err);
+          }
+          else {
+            res.send(doc);
+          }
+        });
+});
+
+app.post("/api", function(){
+  console.log("Body:" + req.body);
+
+  // save Articles to our database
+})
 
 app.listen(PORT, function() {
   console.log("App listening on PORT: " + PORT);

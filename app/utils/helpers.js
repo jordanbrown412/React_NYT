@@ -5,21 +5,22 @@ var nytApi = "84acc639b7af470facdac4d12ca2b946";
 var helpers = {
 
         query: function(search, begin, end) {
-
-            var paramObject = $.param({
             
+            
+
+    // Creating queryUrl for Axios to use
+    var queryUrl = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+
+    // making API call with Axios
+
+    return axios.get(queryUrl, {
+            params: {
             'q': search.trim(),
             'begin_date': begin.trim(),
             'end_date': end.trim(),
             'api-key': nytApi
-        })
-
-    // Creating queryUrl for Axios to use
-    var queryUrl = "https://api.nytimes.com/svc/search/v2/articlesearch.json?" + paramObject;
-
-    // making API call with Axios
-
-    return axios.get(queryUrl).then(function(response) {
+            }
+    }).then(function(response) {
 
         console.log(response);
         var results = response.response.docs;
@@ -35,6 +36,8 @@ var helpers = {
         postHistory: function() {
             return axios.post("/api", {});
         }
-    }
+    };
+
     module.exports = helpers;
+    
 

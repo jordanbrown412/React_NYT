@@ -1,4 +1,4 @@
-var require = require('mongoose');
+var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var ArticleSchema = new Schema({
@@ -6,7 +6,7 @@ var ArticleSchema = new Schema({
         type: String
     },
     date: {
-    type: Dat
+    type: Date
 },
     url: {
      type: String   
